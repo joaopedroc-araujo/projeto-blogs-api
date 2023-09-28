@@ -4,6 +4,11 @@ const { validateDisplayName, validatePassword, validateEmail } = require('../uti
 
 const SECRET = process.env.JWT_SECRET || 'paralelepipedo'; // Não faça isso em casa!
 
+const getAll = async () => {
+  const users = await User.findAll();
+  return users;
+};
+
 const loginUser = async (email, password) => {
   if (!email || !password) {
     throw new Error('Some required fields are missing');
@@ -38,6 +43,7 @@ const userCheck = async (email, password, displayName) => {
 };
   
 module.exports = {
+  getAll,
   loginUser,
   userCheck,
 };

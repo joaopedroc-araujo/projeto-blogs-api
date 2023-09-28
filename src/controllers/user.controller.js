@@ -1,7 +1,7 @@
 const express = require('express');
 const userService = require('../services/user.service');
 const ERROR_MESSAGE_TO_HTTP_STATUS = require('../utils/ERROR_MESSAGES_STATUS');
-// const validateJWT = require('../auth/validateJWT');
+const validateJWT = require('../auth/validateJWT');
 
 const router = express.Router();
 
@@ -12,6 +12,15 @@ router.post('/login', async (req, res) => {
     res.status(200).json({ token });
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+});
+
+router.get('/user', validateJWT, async (req, res) => {
+  try {
+    const users = await userService.getAll();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
