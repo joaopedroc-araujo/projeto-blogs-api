@@ -1,5 +1,6 @@
 const express = require('express');
 const userController = require('./controllers/user.controller');
+const categoryController = require('./controllers/category.controller');
 
 // const findUserByEmail = require('./middlewares/findUserByEmail.middleware');
 
@@ -7,6 +8,7 @@ const app = express();
 app.use(express.json());
 
 app.use('/', userController);
+app.use('/', categoryController);
 
 // não remova ou mova esse endpoint
 app.get('/', (_request, response) => {
