@@ -24,6 +24,19 @@ router.get('/user', validateJWT, async (req, res) => {
   }
 });
 
+router.get('/user/:id', validateJWT, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await userService.getById(id);
+    if (!user) {
+      return res.status(404).json({ message: 'User does not exist' });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.post('/user', async (req, res) => {
   const { email, password, displayName, image } = req.body;
   try {

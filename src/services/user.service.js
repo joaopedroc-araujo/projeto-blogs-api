@@ -5,8 +5,23 @@ const { validateDisplayName, validatePassword, validateEmail } = require('../uti
 const SECRET = process.env.JWT_SECRET || 'paralelepipedo'; // Não faça isso em casa!
 
 const getAll = async () => {
-  const users = await User.findAll();
+  const users = await User.findAll(
+    {
+      attributes: { exclude: ['password'] },
+    },
+  );
+  // console.log(users);
   return users;
+};
+
+const getById = async (id) => {
+  const user = await User.findByPk(
+    id, 
+    {
+      attributes: { exclude: ['password'] },
+    },
+  );
+  return user;
 };
 
 const loginUser = async (email, password) => {
@@ -44,6 +59,7 @@ const userCheck = async (email, password, displayName) => {
   
 module.exports = {
   getAll,
+  getById,
   loginUser,
   userCheck,
 };
