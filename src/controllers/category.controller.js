@@ -4,6 +4,16 @@ const validateJWT = require('../auth/validateJWT');
 
 const router = express.Router();
 
+router.get('/categories', validateJWT, async (_req, res) => {
+  try {
+    const categories = await categoryService.getCategories();
+    // console.log(categories);
+    res.status(200).json(categories);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.post('/categories', validateJWT, async (req, res) => {
   const { name } = req.body;
   
