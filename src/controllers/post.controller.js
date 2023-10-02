@@ -14,23 +14,29 @@ router.get('/post', validateJWT, async (_req, res) => {
   }
 });
 
-router.post('/post', validateJWT, async (req, res) => {
-  const { title, content, categoryIds } = req.body;
-
-  if (!categoryIds) {
-    res.status(400).json({ message: 'one or more "categoryIds" not found' });
-  }
-
-  const newPost = { title, content, categoryIds };
-
-  if (!newPost) return res.status(400).json({ message: 'Some required fields are missing' });
-
+router.get('/post/:id', validateJWT, async (req, res) => {
   try {
-    const post = await postService.createPost(newPost);
-    res.status(201).json(post);
+    const post = await postService.findPostById(req.params.id);
+    return res.status(200).json(post);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message });
+    return res.status(404).json({ message: error.message });
+  }
+});
+
+router.post('/post', async (req, res) => {
+  const { title, content, categoryIds } = req.body;
+
+  if (!title || !content || !categoryIds) {
+    return res.status(400).json({ message: 'Some required fields are missing' });
+  }
+
+  try {
+    const post = await postService.createPost({ title, content, categoryIds }, req.user.id);
+    return res.status(201).json(post);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
   }
 });
 
